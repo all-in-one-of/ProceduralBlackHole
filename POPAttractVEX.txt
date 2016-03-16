@@ -1,0 +1,3 @@
+float intensity = detail(0,"strength",0);
+forcescale *= i@live;
+forcescale *= @intensityMod;

@@ -1,0 +1,17 @@
+//Calculate the strength using a logistic function so it can easily be bounded
+@strength = 1-1/(1+pow(1.008,3.2e-4*(@totalMass-2e6)));
+
+//Create an attribute to track how much has been eaten over time
+@hungry +=(@hungry<0)?pow(@hungry,2)/5000+1:pow(1.005,-pow(@hungry,3)/1000);
+
+//Create an attribute to manage how the black hole diminishes over time if it is not eating
+@starvation = 1-1/(1+pow(2.718, -.06*(@hungry-50)));
+
+//Manage the growth of the black hole as a function of how long it has been since it ate and how much it has eaten previously
+@growth = (log(@totalMass+100)/log(1.5))*pow(1.4,-(10-10*@starvation));
+
+//Truncate the mass for more manageable calculations
+float moddedMass = @totalMass*pow(10,-5);
+
+//Creates an attribute modify how much each unit of mass affects the total value
+@ravenous = (-pow(2,-pow(moddedMass,2))+1)*9940+60;

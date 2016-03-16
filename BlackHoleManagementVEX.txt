@@ -1,0 +1,24 @@
+//Delete low mass objects from the simulation
+if(@mass < .1) removepoint(0, @ptnum);
+
+//Retrieve the target for the simulation, which is set to the center of the black hole
+vector goal = chv("../popattract1/goal");
+
+//Retrieve previously calculated detail attributes
+float growth = detail(0,"growth",0);
+float intensity = detail(0, "strength",0);
+float hungryMod = detail(0, "starvation", 0);
+
+//Set consumption parameters so that it eats from just beyond the surface of the black hole
+//This allows the black hole to have few objects look like they fall in but just the right piece misses
+if(distance(goal, @P)<(growth+1/(growth+1))) {
+    //Capture the mass of each consumed piece
+    setdetailattrib(0,"totalMass", @mass, "add");
+    //Delete Point
+    removepoint(0, @ptnum);
+    //Decrement the attribute that manages the collapse of the black hole.
+    //As the black hole eats more and more, each unit of mass will matter less as the ravenous parameter increases.
+    setdetailattrib(0, "hungry", -log(@mass)/log(detail(0,"ravenous",0)), "add");
+}
+
+@intensityMod = 1000000*intensity*hungryMod;
